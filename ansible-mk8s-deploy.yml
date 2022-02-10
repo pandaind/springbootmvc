@@ -1,0 +1,21 @@
+---
+- name: Create pods using deployment 
+  hosts: mk8s-server
+  become: true
+  user: ubuntu
+ 
+  tasks: 
+  - name: workload files to mk8s-server
+    copy:
+      src: workloads-ansible.yml
+      dest: deploy/workloads-ansible.yml
+  
+  - name: create a deployment
+    command: microk8s.kubectl apply -f workloads-ansible.yml
+    args:
+      chdir: deploy
+ 
+  - name: update deployment with new pods if image updated in docker hub
+    command: microk8s.kubectl rollout restart deployment.apps/demoapp
+    args:
+      chdir: deploy

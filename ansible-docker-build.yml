@@ -1,0 +1,15 @@
+---
+- hosts: cd-server
+
+  tasks:
+  - name: create docker image using jar file
+    command: docker build -t chittaranjanpanda/demoapp:latest .
+    args:
+      chdir: artifacts
+      
+  - name: push image on to dockerhub
+    command: docker push chittaranjanpanda/demoapp:latest
+
+  - name: remove docker images form cd-server
+    command: docker rmi chittaranjanpanda/demoapp:latest
+    ignore_errors: yes
